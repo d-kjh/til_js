@@ -266,7 +266,8 @@ let userEmail : 글자 20자 제한
 let userId : 글자 16자 제한
 let userPassword : 글자 16자 제한
 let userAgree : 참/거짓 숫자 1자 제한
--------------------------------------------
+
+
 let user_name : 글자 20자 제한
 let user_num : 글자 13자 제한
 let user_phone : 글자 11자 제한
@@ -286,6 +287,7 @@ let user_agree : 참/거짓 숫자 1자 제한
 - underfined : 값이 없음(변수 초기값으로 자동 세팅)
 - null : 개발자가 값이 없다고 지정(값이 비워져있다로 세팅)
 - symbol : 절대로 겹치지 않는 변수
+- object : OOP(Object-Oriented Programming)
 
 1. 적용하기
 
@@ -301,6 +303,332 @@ let userPassword = ""; //16자 제한
 let userAgree = false; //숫자 1자 제한
 ```
 
-2. var, let, const 정확히 제약사항 파악하기
+##### 1-5. var, let, const 정확히 제약사항 파악하기
 
-##### 1-5. 참조형 data 종류 (Reference Data Type)
+- 웹브라우저에 저장할 내용, 즉 변수가 있다면 아래를 고민
+
+1. `1순위는 const`
+   -> 변수를 만든다면 나는 var, let, const 중에 무엇을 선택할지 고민
+   const는 변하지 않을 것이다라는 작성법
+   const로 코딩을 하다가 값이 바뀌어야 하는 경우에 let으로 변경한다
+   -> const의 특징
+   1. 만들기 전에 사용할 수 없다.(호이스팅 문제 해결)
+   ```js
+   console.log(userName); // error
+   const userName = "홍길동";
+   ```
+   2. 동일한 이름으로 변수를 또 생성할 수 없다.(변수생성 중복 방지)
+   ```js
+   const userAge = 10;
+   const userAge = 30; // error
+   ```
+   3. 값을 변경할 수 없다.
+   ```js
+   const userCity = "대구";
+   userCity = "서울"; // error
+   ```
+2. `2순위는 let`
+   1. 만들기 전에 사용할 수 없다.(호이스팅 문제 해결)
+   ```js
+   console.log(userName);
+   let userName = "홍길동";
+   ```
+   2. 동일한 이름으로 변수를 또 생성할 수 없다..(중복 에러 생성 : const와 동일)
+   ```js
+   let userAge = 20;
+   let userAge = 30; //error
+   ```
+   3. 값을 변경할 수 있다.(const와 유일한 차이점)
+   ```js
+   let userCity = "대구";
+   let userCity = "서울";
+   ```
+3. `var는 잘 사용하지 않는다`
+   -> 호이스팅 통과되어 버림(추후 오류의 원인)
+   -> 동일한 이름으로도 중복 생성 가능(추후 오류의 원인)
+   -> 값도 변경이 가능
+   -> 기존 코드에서 var를 사용한 케이스가 있다면 변경하지 않고 유지한다.
+
+##### 1-6. 참조형 data 종류 (Reference Data Type)
+
+- 만약 interpark 사이트의 banner 영역의 데이터를 js에서 관리하려고할 때 배너는 `링크 주소, 이미지 주소, 고유한 ID`가 있다.
+- 하나의 배너는 변수 3개씩 가지고 있다.(총 5개의 배너가 있음)
+
+```js
+// 첫 번째 배너
+const bannerUrl_1 = "https://~";
+const bannerImg_1 = "https://~";
+const bannerID_1 = "1";
+// 두 번째 배너
+const bannerUrl_2 = "https://@";
+const bannerImg_2 = "https://@";
+const bannerID_2 = "2";
+// 세 번째 배너
+const bannerUrl_3 = "https://!";
+const bannerImg_3 = "https://!";
+const bannerID_3 = "3";
+// 네 번째 배너
+const bannerUrl_4 = "https://#";
+const bannerImg_4 = "https://#";
+const bannerID_4 = "4";
+// 다섯 번째 배너
+const bannerUrl_5 = "https://$";
+const bannerImg_5 = "https://$";
+const bannerID_5 = "5";
+```
+
+1. 객체
+   -> 관련있는 기본형 데이터들을 `묶어서 하나`로 만들기
+
+```js
+// 1 단계
+  const 객체명 = {};
+
+// 2단계
+  const 객체명 = {
+    이름 : 값, // , 로 연결
+    이름 : 값,
+    이름 : 값
+  }
+
+  const 객체명 = {
+    key Name : Key Value, // , 로 연결
+    이름 : 값,
+    이름 : 값
+  }
+
+
+  const 객체명 = {
+    Property 속성명 : Value, // , 로 연결
+    이름 : 값,
+    이름 : 값
+  }
+```
+
+```js
+// 첫 번째 배너
+const banner_1 = {
+  url: "https://~",
+  img: "https://~",
+  id: "1";
+};
+// 두 번째 배너
+const banner_2 = {
+  url: "https://@",
+  img: "https://@",
+  id: "2";
+}
+```
+
+- 객체 변수 정보에 담겨진 속성 즉, 키명을 통한 값 사용(호출)
+
+```js
+객체명.키명;
+banner_1.url;
+
+["객체명"].키명;
+["banner_1"].url;
+```
+
+2. 배열
+   -> 하나의 이름으로 여러개의 데이터를 묶어서 관리
+
+```js
+const userArray = [1, 2, 3, "안녕", false, null, undefined];
+const bannerrId = ["1", "2", "3"];
+const banner = [
+  { url: "http~", img: "http~", id: "1" },
+  { url: "http~", img: "http~", id: "2" },
+  { url: "http~", img: "http~", id: "3" },
+];
+```
+
+-> 배열의 요소에 값 사용(호출)
+
+```js
+배열명[인덱스번호];
+banner[0];
+banner[1];
+```
+
+##### 1-7. 변수 종합 예제
+
+- 인터파크 티켓 랭킹 작업
+
+```js
+// 섹션의 타이틀
+const sectionTitle = "티켓 랭킹";
+// 섹션의 설명글
+const sectionDesc = "~~~";
+// 섹션의 카테고리
+const sectionCategoryArr = ["뮤지컬", "콘서트", "스포츠"];
+sectionCategory[0];
+sectionCategory[1];
+sectionCategory[2];
+// 티켓의 타이틀 정보
+const ticketTitleArr = [
+  "팬텀 10주년 기념 공연",
+  "뮤지컬 <메디슨 카운티의 다리>",
+  "뮤지컬 <라이카>",
+];
+console.log(ticketTitleArr[0]);
+console.log(ticketTitleArr[1]);
+console.log(ticketTitleArr[2]);
+
+// 티켓의 이미지 경로
+const ticketImgArr = ["https://a.jpg", "https://b.jpg", "https://c.jpg"];
+// 티켓의 링크 경로
+const ticketUrlArr = ["https://a.html", "https://b.html", "https://c.html"];
+// 티켓의 순위
+const ticketRankArr = [1, 2, 3];
+// 티켓의 공연장소
+const ticketPlaceArr = ["대구", "서울", "제주"];
+// 티켓의 공연일시
+const ticketDayArr = ["05/05", "05/07", "05/09"];
+
+// 위의 사항을 효율적으로 관리하기 위한 작업
+const ticket_1 = {
+  title: "팬텀 10주년 기념 공연",
+  img: "https://a.jpg",
+  url: "https://a.html",
+  rank: 1,
+  place: "대구",
+  day: "05/05",
+};
+console.log(ticket_1);
+console.log(ticket_1.title);
+console.log(ticket_1.img);
+console.log(ticket_1.url);
+console.log(ticket_1.rank);
+console.log(ticket_1.place);
+console.log(ticket_1.day);
+
+const ticket_2 = {
+  title: "뮤지컬 <메디슨 카운티의 다리>",
+  img: "https://b.jpg",
+  url: "https://b.html",
+  rank: 2,
+  place: "서울",
+  day: "05/07",
+};
+
+console.log(ticket_2);
+consloe.log(ticket_2["title"]);
+consloe.log(ticket_2["img"]);
+consloe.log(ticket_2["url"]);
+consloe.log(ticket_2["rank"]);
+consloe.log(ticket_2["place"]);
+consloe.log(ticket_2["day"]);
+
+const ticket_3 = {
+  title: "뮤지컬 <라이카>",
+  img: "https://c.jpg",
+  url: "ttps://c.html",
+  rank: 3,
+  place: "제주",
+  day: "05/09",
+};
+const ticketInfoArr = [ticket_1, ticket_2, ticket_3];
+// 보통 아래의 형태로 데이터가 들어오는 것을 JavaScript Object Notation 즉, JSON이라고 함
+const ticketInfoJsonArr = [
+  {
+    title: "팬텀 10주년 기념 공연",
+    img: "https://a.jpg",
+    url: "https://a.html",
+    rank: 1,
+    place: "대구",
+    day: "05/05",
+  },
+  {
+    title: "뮤지컬 <메디슨 카운티의 다리>",
+    img: "https://b.jpg",
+    url: "https://b.html",
+    rank: 2,
+    place: "서울",
+    day: "05/07",
+  },
+  {
+    title: "뮤지컬 <라이카>",
+    img: "https://c.jpg",
+    url: "ttps://c.html",
+    rank: 3,
+    place: "제주",
+    day: "05/09",
+  },
+];
+
+ticketInfoJsonArr[0].title;
+ticketInfoJsonArr[1].title;
+ticketInfoJsonArr[2].title;
+```
+
+### 2. 연산자(Operator)
+
+- 연산을 해서 결과값을 만드는 `기호`
+- 연산자에 의한 새로운 `결과값이 나오는 것을 연산식`
+
+##### 2-1. 사칙연산 (`+ - * / `)
+
+- `+ 연산자`
+
+```js
+const numA = 0;
+const numB = 1;
+const result = numA + numB; // 1
+```
+
+```js
+const strA = "홍길동";
+const numAge = 20;
+
+// "저기~ 홍길동님 반가워요!"
+// 숫자 + 글자는 글자로 인정함
+const result = "저기~ " + strA + "님은 나이가" + numAge + "이군요!";
+// 아래처럼 템플릿 문법을 추천함. 흔히 백틱 이라고 함
+const resultTemplate = `저기~ ${strA}님은 나이가 ${numAge}이군요!`;
+```
+
+- 참고 예제
+
+```html
+<div class="section">
+  <div class="box_wrap">
+    <a href="https:~">뮤지컬 팬텀</a>
+    <img src="https:~" alt="뮤지컬 팬텀 배너이미지" />
+  </div>
+</div>
+```
+
+```js
+const link = "https~";
+const img = "https~";
+const title = "뮤지컬 팬텀";
+const alt = "뮤지컬 팬텀 배너이미지";
+let tag = '<div class="section">';
+tag = tag + '  <div class="box_wrap">';
+tag = tag + '    <a href="' + link + '"https:~">' + title + "</a>";
+```
+
+```js
+const link = "https~";
+const img = "https~";
+const title = "뮤지컬 팬텀";
+const alt = "뮤지컬 팬텀 배너이미지";
+const tag = `
+<div class="section">
+  <div class="box_wrap">
+    <a href="${link}">${title}</a>
+    <img src="${img}" alt="${alt}" />
+  </div>
+</div>
+`;
+```
+
+```js
+const numA = 5;
+const numB = 8;
+const resultA = `${numA} + ${numB} = ${numA + numB}`;
+const resultB = `${numA} - ${numB} = ${numA - numB}`;
+const resultC = `${numA} * ${numB} = ${numA * numB}`;
+const resultD = `${numA} / ${numB} = ${numA / numB}`;
+```
