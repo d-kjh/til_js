@@ -14,7 +14,7 @@
 3. Server, DBn 데스크톱 Application를 제어 : Node.js 로 가능
 ```
 
-### 2. JS의 종류 2가지
+### 2. JS의 사용용도 2가지
 
 ##### 2-1. 웹브라우저용 JS (Web API)
 
@@ -2217,4 +2217,290 @@ function Coffee() {
 
 Coffee();
 new Coffee();
+```
+
+##### 10-6. 이해하기 위해 아래처럼 정리
+
+- function에 작성한 곳에 this는 `어디서 함수를 사용했는가`에 따라 다르다
+
+```js
+function say(){
+  this 는 ? window가 된다.
+}
+say(); 지금은 global 영역 즉, window 에서 사용했음
+```
+
+```js
+const Person = {
+  say: function (){
+      this ?
+  }
+}
+
+Person.say(); 지금은 Person이 say 함수를 사용했음
+```
+
+- 과연 출력 결과는 무엇이 나올까?
+
+```js
+const Person = {
+  name: "아이유",
+  say: function () {
+    console.log(this.name);
+  },
+};
+
+Person say();
+```
+
+##### 10-7. 화살표 함수의 this는?
+
+- 화살표 함수는 `상위 스코프`를 말함
+
+```js
+// 여기는 window
+const say - () => {
+  console.log(this); //현재의 상위 범위
+  // window 출력됨
+};
+say();
+```
+
+```js
+const Person = {
+  name: "아이유",
+  say: function () {
+    console.log(this); // 객체가 호출
+    console.log(this.name); // 객체.name 찾는다
+
+    setTimeout(function () {
+      console.log(this); // window 가 호출
+      console.log(this.name); // window.name 찾는다
+    }, 3000);
+  },
+  sayArrow: function () {
+    console.log(this); // 객체가 호출
+    console.log(this.name); // 객체.name 찾는다.
+    setTimeout(() => {
+      console.log(this); // 화살표는 나보다 위에 영역
+      console.log(this.name); // 위에 영역.name
+    }, 3000);
+  },
+};
+Person.sayArrow();
+```
+
+### 11. 생성자 함수 (목적이 `객체를 생성`하는 것)
+
+- `new 키워드`를 붙여서 함수를 호출함
+
+```js
+function Person(_name) {
+  console.log(this);
+}
+new Person();
+```
+
+### 12. 클래스
+
+- 목적이 `객체를 생성`하는 것
+
+##### 12-1. 생성자 메소드 ( constructor Method )
+
+```js
+class Person {
+  // 클래스에서 메소드 함수 만드는 법
+  // 메소드명(){}
+
+  // 객체를 생성하는 함수 : 변경 불가
+  // 디폴트 객체 생성자 함수
+  constructor(_name, _age) {
+    console.log("new 하면 자동 실행");
+    console.log(_name);
+    this.name = _name;
+    this.age = _age;
+  }
+}
+
+const a = new Person("둘리", 500000);
+console.log(a);
+```
+
+##### 12-2. 나의 메소드 만들기
+
+- `메소드명() { 할일 }`
+
+```js
+class Person {
+  constructor(_name, _age) {
+    this.name = _name;
+    this.age = _age;
+  }
+  // say 라는 메소드
+  say() {
+    console.log(this.name);
+  }
+}
+
+const a = new Person("둘리", 500000);
+a.say();
+```
+
+##### 12-3. 나의 속성 만들기
+
+- Property : 프로퍼티
+- constructor 메소드에서 만든다.
+
+```js
+ constructor(_name, _age) {
+    this.name = _name;
+    this.age = _age;
+  }
+```
+
+##### 12-4. 상속 이해해보기
+
+1. 1단계
+
+```js
+// 동물
+class Animal {
+  constructor(eye, nose) {
+    this.eye = eye;
+    this.nose = nose;
+  }
+}
+const a = new Animal(2, 1);
+console.log(a);
+// 강아지
+class Dog extends Animal {
+  constructor() {
+    super(2, 5); // new Animal();
+    this.name = "강아지";
+  }
+}
+
+const b = new Dog();
+console.log(b);
+
+// 새
+class Bird extends Animal {
+  constructor() {
+    super(2, 1);
+    this.name = "이쁜새";
+  }
+}
+const c = new Bird();
+console.log(c);
+```
+
+2. 2단계
+
+```js
+// 동물
+class Animal {
+  constructor(eye, nose) {
+    this.eye = eye;
+    this.nose = nose;
+  }
+  speak() {
+    console.log("소리를 내요");
+  }
+}
+const a = new Animal(2, 1);
+a.speak();
+
+console.log(a);
+// 강아지
+class Dog extends Animal {
+  constructor() {
+    super(2, 5); // new Animal();
+    this.name = "강아지";
+  }
+  speak() {
+    console.log("멍멍이라고 소리를 내요");
+  }
+}
+
+const b = new Dog();
+b.speak();
+console.log(b);
+
+// 새
+class Bird extends Animal {
+  constructor() {
+    super(2, 1);
+    this.name = "이쁜새";
+    this.city = "대구";
+  }
+  speak() {
+    console.log("짹짹이라고 소리를 내요");
+  }
+}
+const c = new Bird();
+c.speak();
+console.log(c);
+```
+
+##### 12-5. 접근 제한자 이해하기
+
+- 프로퍼티와 메소드를 활용하는
+
+1. 만약 java 라면
+
+```java
+public : 마음대로 접근가능, 공유하는
+private : 사적인 즉, 클래스 내부에서만 접근가능
+protected : 상속 받은 클래스들만 접근 가능
+```
+
+2. 만약 javascript 라면
+
+```js
+public : 마음대로 접근가능, 공유하는
+# : 사적인 즉, 클래스 내부에서만 접근가능(private 역할)
+```
+
+##### 12-6. static : 클래스에 고정된 속성, 메소드
+
+```js
+class MathCalc {
+  static add(a, b) {}
+  static minus(a, b) {}
+}
+MathCalc.add(3, 4);
+MathCalc.minus(3, 4);
+
+const a = new MathCalc();
+a.add(3, 4); // 에러 : 생성된 객체로 접근 불가
+```
+
+### 13. 콜백함수
+
+- `call`은 함수를 실행(호출)한다는 의미
+- 일반 함수에 `매개변수로 전달된 함수`를 callback 함수라 칭한다.
+
+##### 13-1. 콜백함수 활용처
+
+- 주로 사용자 행동에 따른 `이벤트 발생`시 실행하는 함수
+- 서버 연동하여 자료를 호출하는 `이벤트 발생`시 실행하는 함수
+
+```js
+const say = function () {};
+const cry = () => {};
+
+// 매개변수로 전달된 함수 실행
+function run(a) {
+  a();
+}
+
+run(say);
+run(cry);
+// 아래 추천함.
+run(function () {});
+```
+
+```js
+const bt = document.querySelector(".bt");
+bt.addEventListener("click", function () {});
 ```
