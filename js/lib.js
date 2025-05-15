@@ -1,12 +1,15 @@
-const say = function () {};
-const cry = () => {};
+const student_1 = {
+  name: "홍길동",
+  age: 10,
+};
+const student_2 = {
+  name: "둘리",
+  age: 2000,
+};
 
-// 매개변수로 전달된 함수 실행
-function run(a) {
-  a();
+function StudentInfo(_name, _age) {
+  this.name = _name;
+  this.age = _age;
 }
-
-run(say);
-run(cry);
-// 아래 추천함.
-run(function () {});
+const student_1 = new StudentInfo("홍길동", 20);
+const student_2 = new StudentInfo("둘리", 2000);
