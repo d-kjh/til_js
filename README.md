@@ -2849,7 +2849,7 @@ console.log(`복제본 copyArrowArr : ${copyArrowArr}`);
 
 2. filter()
 
-- 조건에 참인 것만 모아서 배열 리턴
+- `조건에 참`인 것만 모아서 배열 리턴
 - 자주 사용은 합니다.
 
 ```js
@@ -2957,3 +2957,217 @@ const result = numArr1.includes(3);
 console.log(`typeof ${typeof result} , ${result}`);
 // typeof boolean , true
 ```
+
+### 16. 객체와 배열의 필수 이해사항
+
+##### 16-1. 반복문
+
+- 배녈에서 사용하는 경우 반복문 문법
+
+```js
+const arr = [1, 2, 3, 4];
+
+//가장 보편적인 방식
+for (let i = 0; i < arr.length; i++) {
+  console.log(arr[i]);
+}
+
+// 배열의 요소 반복문 버전
+arr.forEach(function (item) {
+  console.log(item);
+});
+
+// 배열의 for of 문
+for (const item of arr) {
+  console.log(item);
+}
+
+// 배열의 map : 새로운 배열을 만듦
+const now = arr.map(function (item) {
+  return item;
+});
+```
+
+- 객체에서 사용하는 경우의 반복문 문법
+
+```js
+const person = {
+  age: 10,
+  nickName: "hong",
+  isMember: false,
+};
+
+// 객체의 속성명 알아내기
+for (let key in person) {
+  console.log(key); // age, nickName, isMember
+}
+
+// 객체의 속성에 보관하는 값 알아내기
+for (let key in person) {
+  console.log(person[key]); // 10, hong, false
+}
+```
+
+##### 16-2. 값을 추출해서 보관하기
+
+- 배열
+
+```js
+const arr = ["사과", "딸기", "참외"];
+// 아래처럼 요소 값을 알아내는 것은 비추천
+arr[0];
+arr[1];
+arr[2];
+
+// 반복문으로 알아내기
+for (let i = 0; i < arr.length; i++) {
+  arr[i];
+}
+```
+
+- `배열 Spread 문법` (매우 중요)
+  - 배열의 요소를 알아내고,
+  - 배열의 요소를 복사하고,
+  - 새로운 배열에 담아주고
+
+```js
+const arr = ["사과", "딸기", "참외"];
+
+// 아래처럼 하지는 않습니다.
+const apple = arr[0];
+const straw = arr[1];
+const melon = arr[2];
+
+// 배열 Spread 문법
+const [apple, straw, melon] = [...arr];
+
+// 두 배열을 Spread 문법으로 합치기
+const numArr = [1, 2, 3];
+const strArr = ["a", "b", "c"];
+// [1, "a", "b", "c", 2, 3]
+// 아래처럼 권장하지는 않습니다.
+const sampleArr = [1, strArr[0], strArr[1], str[2], 2, 3];
+// Spread 활용
+const resultArr = [1, ...strArr, 2, 3];
+// 구분하세요. (Rest 파라메터 문법)
+function showArr(...rest) {}
+```
+
+- 객체
+
+```js
+const person = {
+  age: 10,
+  nickName: "hong",
+  isMember: false,
+};
+
+// 아래처럼은 비추천
+const newPerson = {
+  age: person.age,
+  nickName: person.nickName,
+  isMember: person.isMember,
+};
+
+// 객체 Spread 문법
+const nowPerson = { ...person };
+
+// 두개의 객체를 합치기
+const a = { age: 10, name: "hong" };
+const b = { city: "대구", year: 2025 };
+const result = { ...a, ...b };
+// 결과 { age: 10, name: "hong", city: "대구", year: 2025 }
+
+// 원본 객체 복사하고 새로운 속성 추가하기
+const ari = { a: 1, b: "안녕" };
+const now = { ...ori, gogo: "happy" };
+// now { a:1, b:"안녕", gogo:"happy" }
+
+// 함수에 매개변수로 객체를 복사해서 전달하기
+const user = { name: "아이유", age: 20 };
+function show() {}
+show({ ...uesr });
+```
+
+### 17. 비동기(Asyncronous) 통신
+
+- `비동기`는 시간이 오래 걸리는 작업
+- 예) 데이터 서버에서 자료를 요청(Request) 및 응답(Response)
+- 예) 데이터 서버에서 파일 전송 시
+- 비동기 작업 중에 결과를 기다리지 않고 다른 작업을 병렬로 실행하도록
+
+##### 17-1. 비동기 작업 문법 종류
+
+- XHR (Xml Http Request)
+- Callback
+- Promise
+- async/await
+
+##### 17-2. 데모용 API 사이트
+
+- https://chromewebstore.google.com/detail/attack-on-titan-mikasa-ac/fnkgikmcdjhcjoeghbcjkimaeoippblk
+- https://www.data.go.kr/index.jsp
+
+##### 17-3. XHR
+
+- 서버와 통신하는 작업을 위해서 기본적으로 제공이 됨.
+- `Request` : 요청, url로 자료를 요청한다
+- `Response` : 응답, url로부터 자료를 돌려받는다
+- status 200 류의 값 : 정상적으로 자료를 응답함
+- status 400 류의 값 : url이 존재하지 않음
+- status 500 류의 값 : 데이터 서버가 오류거나 전원이 꺼짐
+- https://developer.mozilla.org/ko/docs/Web/HTTP/Reference/Status
+
+##### 17-4. Callback 활용하기
+
+- 자료 응답 후 처리하기
+
+```js
+// 데이터 서버에 자료를 호출함.
+
+function getData(api = "posts", fn) {
+  // 1. xhr 객체 한개 만듦
+  const xhr = new XMLHttpRequest();
+  // 2. 주소를 연결함
+  xhr.open("GET", `https://jsonplaceholder.typicode.com/${api}`);
+  // 3. 웹브라우저로 요청을 합니다.
+  xhr.send();
+
+  // 4. 요청 이후 응답이 오기를 기다린다.
+  xhr.onload = function () {
+    //console.log("요청이 되어졌을 때 백엔드 회신정보 : ", xhr);
+    if (xhr.status === 200) {
+      // console.log("정상적인 Response 됨 : ", xhr.response);
+      // 콜백함수 : 자료가 오면 자료를 활용하고 싶다.
+      fn(xhr.response);
+    } else if (xhr.status === 404) {
+      console.log("주소가 잘못되었네요.");
+    } else if (xhr.status === 505) {
+      console.log("서버에 오류입니다. 잠시 후 시도해 주세요.");
+    }
+  };
+}
+// 콜백함수 만들기 : 자료가 들어오면 처리함.
+const postsParser = function (res) {
+  console.log(res);
+};
+const commentsParser = function (res) {};
+const albumsParser = function (res) {};
+const photosParser = function (res) {};
+const todosParser = function (res) {};
+const usersParser = function (res) {};
+// 함수 사용
+getData("posts", postsParser);
+getData("comments", commentsParser);
+getData("albums", albumsParser);
+getData("photos", photosParser);
+getData("todos", todosParser);
+getData("users", usersParser);
+```
+
+##### 17-5. Promise 활용하기
+
+- 서버 연동이 끝날 때 원하는 콜백함수 실행
+- 두 개의 매개변수를 전달 받는다
+- resolve 콜백함수 : 성공 시 실행함수
+- reject 콜백함수 : 실패 시 실행함수
